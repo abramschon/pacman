@@ -83,10 +83,12 @@ def GraphSearch(problem, fringe):
             pop() - visit a state from the structure
             isEmpty() - all structures have been visited
 
-    States are of the form:
+    States are of the form for the PositionSearchProblem:
         (   (x,y), 
             ['North', 'South', 'West', ... <directions to current point>], 
             <cumulative cost to point>  )
+
+    For the CornersProblem, the position tuple also contains info on previously visited corners
     """
 
     #init 
@@ -96,6 +98,7 @@ def GraphSearch(problem, fringe):
 
     while True:
         if fringe.isEmpty():                #no solutions found
+            print("Solution not found")
             sys.exit(1) 
 
         state = fringe.pop()                #visit a state 

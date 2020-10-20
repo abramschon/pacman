@@ -272,10 +272,7 @@ class CornersProblem(search.SearchProblem):
 
     We choose to represent state space as a tuple containing:
         ((x,y),                 #the current position 
-         (1,1), (1,top), ... ) # a list of the corners visited on the current path
-
-    By modelling the visited corners as a list, 
-        we consider the order in which they have been visited as important
+         ((1,1), (1,top), ...) )#a tuple of the corners visited on the current path
     """
 
     def __init__(self, startingGameState):
@@ -327,7 +324,7 @@ class CornersProblem(search.SearchProblem):
                 #      Is this a corner?            Unvisited corner?           
                 if (state[0] in self.corners) and (state[0] not in visited_corners): 
                     visited_corners.append(state[0])
-                    visited_corners.sort()
+                    visited_corners.sort() 
                 
                 nextState = ( (nextx, nexty), tuple(visited_corners))
                 cost = 1   #cost for each step is 1
