@@ -314,7 +314,6 @@ class CornersProblem(search.SearchProblem):
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            print(state)
             x,y = state[0]
             visited_corners = list(state[1]) #already visited corners
             dx, dy = Actions.directionToVector(action)
@@ -364,8 +363,15 @@ def cornersHeuristic(state, problem):
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
-    "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    #we are going to use the manhattan distance from the current position to the furthest unvisited corner as a heuristic
+    distances = []
+    for corner in corners:
+        if corner not in state[1]:  #corner hasn't been visited
+            x, y = state[0]         #current position
+            mdistance = abs(x - corner[0]) + abs(y-corner[1])
+            distances.append(mdistance)
+
+    return max(distances) # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
