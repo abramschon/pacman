@@ -326,7 +326,8 @@ class CornersProblem(search.SearchProblem):
                 
                 #      Is this a corner?            Unvisited corner?           
                 if (state[0] in self.corners) and (state[0] not in visited_corners): 
-                    visited_corners.append(state[0])  
+                    visited_corners.append(state[0])
+                    visited_corners.sort()
                 
                 nextState = ( (nextx, nexty), tuple(visited_corners))
                 cost = 1   #cost for each step is 1
