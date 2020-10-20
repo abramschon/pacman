@@ -270,7 +270,12 @@ class CornersProblem(search.SearchProblem):
     """
     This search problem finds paths through all four corners of a layout.
 
-    You must select a suitable state space and successor function
+    We choose to represent state space as a tuple containing:
+        ((x,y),                 #the current position 
+         (1,1), (1,top), ... ) # a list of the corners visited on the current path
+
+    By modelling the visited corners as a list, 
+        we consider the order in which they have been visited as important
     """
 
     def __init__(self, startingGameState):
@@ -285,24 +290,19 @@ class CornersProblem(search.SearchProblem):
             if not startingGameState.hasFood(*corner):
                 print('Warning: no food in corner ' + str(corner))
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
-        # Please add any code here which you would like to use
-        # in initializing the problem
-        "*** YOUR CODE HERE ***"
 
     def getStartState(self):
-        """
-        Returns the start state (in your state space, not the full Pacman state
-        space)
-        """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        """ Returns the start state """
+        return ( self.startingPosition, () )
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
+
+        We need it to end on a corner, having already visited the other 3 corners on this path
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #      Current position a corner?     Visited 3 corners?      Not previously visited?
+        return (state[0] in self.corners) and (len(state[1])==3) and (state[0] not in state[1])  
 
     def getSuccessors(self, state):
         """
@@ -317,14 +317,21 @@ class CornersProblem(search.SearchProblem):
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
-
-            "*** YOUR CODE HERE ***"
+            print(state)
+            x,y = state[0]
+            visited_corners = list(state[1]) #already visited corners
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if not self.walls[nextx][nexty]:   #check for valid move
+                
+                #      Is this a corner?            Unvisited corner?           
+                if (state[0] in self.corners) and (state[0] not in visited_corners): 
+                    visited_corners.append(state[0])  
+                
+                nextState = ( (nextx, nexty), tuple(visited_corners))
+                cost = 1   #cost for each step is 1
+                successors.append( ( nextState, action, cost) )
+            
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
