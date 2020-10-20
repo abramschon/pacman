@@ -16,7 +16,7 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
-
+import sys
 import util
 
 class SearchProblem:
@@ -72,6 +72,47 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
+def GraphSearch(problem, fringe):
+    """
+    We attempt to provide a unified approach to implementing the search algorthms.
+
+    args:
+    fringe: a data structure - either a stack(DFS), queue(BFS) or priority queue(UCS)
+        This data structure needs to have the methods:
+            push()  - add a state to the structure
+            pop() - visit a state from the structure
+            isEmpty() - all structures have been visited
+
+    States are of the form:
+        (   (x,y), 
+            ['North', 'South', 'West', ... <directions to current point>], 
+            <cumulative cost to point>  )
+    """
+
+    #init 
+    closed = set()                          #keep track of visited states (x,y)
+    state = problem.getStartState()
+    fringe.push((state, list(), 0))
+
+    while True:
+        if fringe.isEmpty():                #no solutions found
+            sys.exit(1) 
+
+        state = fringe.pop()                #visit a state 
+
+        if problem.isGoalState(state[0] ):  #if goal state - return path to goal
+            return state[1]
+
+        if state[0] not in closed:          #check hasn't been visited before
+            closed.add(state[0])            #add it to the set
+            for child in problem.getSuccessors(state[0]):
+                child_state     = child[0]
+                path_to_child   = state[1]+[child[1]]
+                cumul_cost      = state[2]+child[2]
+                fringe.push( (child_state, path_to_child, cumul_cost) )
+
+
+
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -86,8 +127,8 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return GraphSearch(problem, util.Stack())
+    
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
