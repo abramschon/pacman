@@ -466,15 +466,13 @@ def foodHeuristic(state, problem):
     position, foodGrid = state
     food = foodGrid.asList()
     
-    #find manhattan distances from current point to food and saved furthest
-    mdistances = [abs(x-position[0])+abs(y-position[1]) for x,y in food]
-    # ordered food
-    order = sorted(zip(mdistances,food),  key=lambda pair: pair[0], reverse=True)
-    
-    if not order: #in case all the food has been eaten
-        return 0
+    #find actual distances from current point to food and saved furthest
+    distances = [0]
+    for point in food:
+        prob = PositionSearchProblem(problem.startingGameState, start=position, goal=point, warn=False, visualize=False)
+        distances.append( len(search.ucs(prob)) )
 
-    return order[0][0]
+    return max(distances)
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
