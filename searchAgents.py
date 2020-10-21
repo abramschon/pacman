@@ -464,8 +464,17 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    food = foodGrid.asList()
+    
+    #find manhattan distances from current point to food and saved furthest
+    mdistances = [abs(x-position[0])+abs(y-position[1]) for x,y in food]
+    # ordered food
+    order = sorted(zip(mdistances,food),  key=lambda pair: pair[0], reverse=True)
+    
+    if not order: #in case all the food has been eaten
+        return 0
+
+    return order[0][0]
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
