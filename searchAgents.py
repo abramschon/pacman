@@ -465,19 +465,22 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     foodList = foodGrid.asList()
-    norm = lambda start, dest: mazeDistance(start, dest, problem.startingGameState) 
-    #norm = manhattan_distance
+    norm = lambda start, dest: mazeDistance(start, dest, problem.startingGameState) #actual distance
+    #norm = manhattan_distance      #consider other norms such as manhattan_distance or euclidean_distance
 
-    #find actual distances from current point to food and saved furthest
+    #find distances from current point to food and saved furthest
     max_dist = 0
     for point in foodList:
-        d = norm(position, point)
+        d = norm(position, point)   #calculate distance from current position to food position using appropriate norm
         if d > max_dist:
-            max_dist = d
+            max_dist = d            #update furthest distance if a further position is found
     return max_dist
 
 def manhattan_distance(point1, points2):
     return abs(point1[0]-points2[0]) + abs(point1[1]-points2[1]) 
+
+def euclidean_distance(point1, points2):
+    return ( (point1[0]-points2[0])**2 + (point1[1]-points2[1])**2 )**(1/2)
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
