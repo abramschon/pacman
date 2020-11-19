@@ -4,9 +4,7 @@
 
 This is my completed code for the Search assignment. The report is called `SearchReportBramSchonfeldt.pdf`.
 
-To run the autograder on the code, type:
-
-`python autograder.py`
+After downloading all the required files from the [course website](https://inst.eecs.berkeley.edu/~cs188/fa20/project1/) (those we were not supposed to alter that render pacman and his many mazes), the autograder can be run via `python autograder.py`.
 
 Note that the default heuristic (*actual distance to furthest bite of food*) for question 7, takes a while to compute
 for each step of the algorithm, however, results in a very low number of 'legal expansions'. For a faster
